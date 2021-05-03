@@ -1,0 +1,34 @@
+{
+  "name": "movie-finder-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/priyanshunayan/movie-finder-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/priyanshunayan/movie-finder-api/issues"
+  },
+  "homepage": "https://github.com/priyanshunayan/movie-finder-api#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "csv-parse": "^4.15.4",
+    "express": "^4.17.1",
+    "mongoose": "^5.12.7",
+    "morgan": "^1.10.0",
+    "mysql": "^2.18.1",
+    "sqlite": "^4.0.21",
+    "sqlite3": "^5.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
