@@ -25,6 +25,8 @@
     "mongoose": "^5.12.7",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
+    "postcss-modules": "^4.0.0",
+    "shortid": "^2.2.16",
     "sqlite": "^4.0.21",
     "sqlite3": "^5.0.2"
   },

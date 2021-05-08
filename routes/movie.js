@@ -3,33 +3,57 @@ const db = require("../database");
 const router = express.Router();
 
 router.get("/", (req, res, next) => {
-  const {
-    genre,
-    year_start,
-    year_end,
-    rating_start,
-    rating_end,
-    page,
-  } = req.query;
-  const response = console.log(req.query);
+  // get session id only
+  const { session_id } = req.query;
 
-  //Construct Query
+  // read from query table on corresponding session id and return union of two queries
 
-  const sql = `SELECT * FROM movies WHERE Genre LIKE '%${genre}%' AND Released_Year BETWEEN ${year_start} AND ${year_end} AND IMDB_Rating BETWEEN ${rating_start} AND ${rating_end} LIMIT 20 OFFSET ${
-    20 * (page - 1)
-  } `;
+  const retrieveQuery = `SELECT start_year, end_year, rating_start, rating_end, genre FROM query WHERE session_id="${session_id}"`;
+
   db.then(async (db) => {
-    const result = await db.all(sql);
-    console.log(result);
-    res.status(200).json({
-      message: "Fetched Movies",
-      result: result,
+    const results = await db.all(retrieveQuery);
+    return { results, db };
+  })
+    .then(({ results, db }) => {
+      const response = new Set();
+      const query = [];
+      results.forEach(
+        ({ start_year, end_year, rating_start, rating_end, genre }) => {
+          const genreArray = genre.split(",");
+          genreArray.forEach((genreEle) => {
+            const sql = `SELECT * FROM movies WHERE Genre LIKE '%${genreEle}%' AND Released_Year BETWEEN ${start_year} AND ${end_year} AND IMDB_Rating BETWEEN ${rating_start} AND ${rating_end}`;
+            query.push(sql);
+          });
+        }
+      );
+      return { query, db };
+    })
+    .then(async ({ query, db }) => {
+      const bothResults = [];
+      for (let index = 0; index < query.length; index++) {
+        const tempResult = await db.all(query[index]);
+        bothResults.push(...tempResult);
+      }
+      return bothResults;
+    })
+    .then((results) => {
+      const response = new Set();
+      for (let i = 0; i < results.length; i++) {
+        response.add(results[i]);
+      }
+      return response;
+    })
+    .then((response) => {
+      res.status(200).json({
+        totalItems: response.size,
+        data: Array.from(response),
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: err.message,
+      });
     });
-  }).catch((err) => {
-    res.status(500).json({
-      message: err.message,
-    });
-  });
 });
 
 module.exports = router;
