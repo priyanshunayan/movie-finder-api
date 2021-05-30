@@ -20,12 +20,14 @@
   "homepage": "https://github.com/priyanshunayan/movie-finder-api#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "csv-parse": "^4.15.4",
     "express": "^4.17.1",
     "mongoose": "^5.12.7",
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
     "postcss-modules": "^4.0.0",
+    "request": "^2.88.2",
     "shortid": "^2.2.16",
     "sqlite": "^4.0.21",
     "sqlite3": "^5.0.2"

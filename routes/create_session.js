@@ -5,7 +5,6 @@ const db = require("../database");
 
 router.post("/", (req, res) => {
   const { session_creator } = req.body;
-  console.log(session_creator);
   const created_at = new Date().getTime();
   const id = shortId();
   const sqlQuery = `INSERT INTO sessions (id, session_creator, created_at) VALUES ("${id}", "${session_creator}", ${created_at});`;

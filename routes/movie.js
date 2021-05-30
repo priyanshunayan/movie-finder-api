@@ -1,6 +1,7 @@
 const express = require("express");
 const db = require("../database");
 const router = express.Router();
+const request = require("request");
 
 router.get("/", (req, res, next) => {
   // get session id only
@@ -15,13 +16,12 @@ router.get("/", (req, res, next) => {
     return { results, db };
   })
     .then(({ results, db }) => {
-      const response = new Set();
       const query = [];
       results.forEach(
         ({ start_year, end_year, rating_start, rating_end, genre }) => {
           const genreArray = genre.split(",");
           genreArray.forEach((genreEle) => {
-            const sql = `SELECT * FROM movies WHERE Genre LIKE '%${genreEle}%' AND Released_Year BETWEEN ${start_year} AND ${end_year} AND IMDB_Rating BETWEEN ${rating_start} AND ${rating_end}`;
+            const sql = `SELECT * FROM movie WHERE Genre LIKE '%${genreEle}%' AND Released_Year BETWEEN ${start_year} AND ${end_year} AND IMDB_Rating BETWEEN ${rating_start} AND ${rating_end}`;
             query.push(sql);
           });
         }
@@ -37,15 +37,20 @@ router.get("/", (req, res, next) => {
       return bothResults;
     })
     .then((results) => {
-      const response = new Set();
-      for (let i = 0; i < results.length; i++) {
-        response.add(results[i]);
-      }
-      return response;
+      const uniqueArray = results.filter((thing, index) => {
+        const _thing = JSON.stringify(thing);
+        return (
+          index ===
+          results.findIndex((obj) => {
+            return JSON.stringify(obj) === _thing;
+          })
+        );
+      });
+      return uniqueArray;
     })
     .then((response) => {
       res.status(200).json({
-        totalItems: response.size,
+        totalItems: response.length,
         data: Array.from(response),
       });
     })

@@ -7,8 +7,6 @@ const db = sqlite
     driver: sqlite3.Database,
   })
   .then(async (db) => {
-    // const result = await db.all("SELECT Genre FROM movies");
-    // console.log(result);
     console.log("DB open");
     return db;
   });
