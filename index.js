@@ -10,6 +10,9 @@ const joinSession = require("./routes/join_session");
 const likeMovieRoute = require("./routes/like_movie");
 const matchedMovieRoute = require("./routes/matched_movie");
 const hasJoinedRoute = require("./routes/has_joined");
+const selectedFiltersRoute = require("./routes/selected_filter");
+const sessionCreatorRoute = require("./routes/session_creator");
+
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
@@ -17,7 +20,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(morgan("tiny"));
-
 
 app.use("/fetch-movies", movieRoute);
 app.use("/create-session", sessionRote);
@@ -30,5 +32,8 @@ app.use("/matched-movies", matchedMovieRoute);
 
 app.use("/like-movie", likeMovieRoute);
 app.use("/has-joined", hasJoinedRoute);
+
+app.use("/selected_filters", selectedFiltersRoute);
+app.use("/session_creator", sessionCreatorRoute);
 
 module.exports = app;
