@@ -18,14 +18,17 @@ app.use(express.json());
 
 app.use(morgan("tiny"));
 
+
 app.use("/fetch-movies", movieRoute);
 app.use("/create-session", sessionRote);
 app.use("/register-query", registerQueryRoute);
+
+// Use session for these two routes
+
 app.use("/join-session", joinSession);
-app.use("/like-movie", likeMovieRoute);
 app.use("/matched-movies", matchedMovieRoute);
+
+app.use("/like-movie", likeMovieRoute);
 app.use("/has-joined", hasJoinedRoute);
 
-app.listen("3000", (err) => {
-  if (err) throw err;
-});
+module.exports = app;

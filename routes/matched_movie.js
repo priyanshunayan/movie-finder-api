@@ -11,6 +11,7 @@ router.get("/", (req, res) => {
   db.then(async (db) => {
     const result = await db.all(query);
     res.status(200).json({
+      session_id: session_id,
       totalItems: result.length,
       data: result,
     });

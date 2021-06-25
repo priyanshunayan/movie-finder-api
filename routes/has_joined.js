@@ -11,11 +11,6 @@ router.get("/:session_id", (req, res) => {
 
   db.then(async (db) => {
     const result = await db.all(sqlQuery);
-
-    res.status(200).json({
-      session_id: session_id,
-      refresh: result.length > 1 ? 1 : 0,
-    });
   }).catch((err) => {
     res.status(500).json({
       error: err.message,

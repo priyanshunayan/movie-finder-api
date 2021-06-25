@@ -7,6 +7,7 @@ router.post("/", (req, res) => {
   const { session_id } = req.body;
   /* Select created at date of the provided session and check if can join or not */
   const sqlQuery = `SELECT created_at FROM sessions WHERE id="${session_id}"`;
+
   db.then(async (db) => {
     const result = await db.all(sqlQuery);
     res.status(200).json({
