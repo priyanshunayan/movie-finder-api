@@ -4,11 +4,18 @@ const shortId = require("shortid");
 const db = require("../database");
 
 router.post("/", (req, res) => {
-  const { session_id, start_year, end_year, rating_start, rating_end, genre } =
-    req.body;
+  const {
+    session_id,
+    start_year,
+    end_year,
+    rating_start,
+    rating_end,
+    genre,
+    language,
+  } = req.body;
 
   const id = shortId();
-  const sqlQuery = `INSERT INTO query (id, session_id, start_year, end_year, rating_start, rating_end, genre) VALUES ("${id}", "${session_id}", ${start_year}, ${end_year}, ${rating_start}, ${rating_end}, "${genre}");`;
+  const sqlQuery = `INSERT INTO query (id, session_id, start_year, end_year, rating_start, rating_end, genre, language) VALUES ("${id}", "${session_id}", ${start_year}, ${end_year}, ${rating_start}, ${rating_end}, "${genre}", "${language}");`;
 
   db.then(async (db) => {
     const result1 = await db.exec(sqlQuery);

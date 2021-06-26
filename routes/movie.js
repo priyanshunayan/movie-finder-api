@@ -9,7 +9,9 @@ router.get("/", (req, res, next) => {
 
   // read from query table on corresponding session id and return union of two queries
 
-  const retrieveQuery = `SELECT start_year, end_year, rating_start, rating_end, genre FROM query WHERE session_id="${session_id}"`;
+  // Language selected -> English, Hindi, French, Japenese, Dutch, Russian, Portuguese, indonesian,
+
+  const retrieveQuery = `SELECT start_year, end_year, rating_start, rating_end, genre, language FROM query WHERE session_id="${session_id}"`;
 
   db.then(async (db) => {
     const results = await db.all(retrieveQuery);
@@ -18,10 +20,23 @@ router.get("/", (req, res, next) => {
     .then(({ results, db }) => {
       const query = [];
       results.forEach(
-        ({ start_year, end_year, rating_start, rating_end, genre }) => {
+        ({
+          start_year,
+          end_year,
+          rating_start,
+          rating_end,
+          genre,
+          language,
+        }) => {
           const genreArray = genre.split(",");
           genreArray.forEach((genreEle) => {
-            const sql = `SELECT * FROM movie WHERE Genre LIKE '%${genreEle}%' AND Released_Year BETWEEN ${start_year} AND ${end_year} AND IMDB_Rating BETWEEN ${rating_start} AND ${rating_end}`;
+            let sql;
+            if (genreEle !== "All genres") {
+              sql = `SELECT * FROM movie WHERE original_language="${language}" AND Genre LIKE '%${genreEle}%' AND Released_Year BETWEEN ${start_year} AND ${end_year} AND IMDB_Rating BETWEEN ${rating_start} AND ${rating_end}`;
+            } else {
+              sql = `SELECT * FROM movie WHERE original_language="${language}" AND Released_Year BETWEEN ${start_year} AND ${end_year} AND IMDB_Rating BETWEEN ${rating_start} AND ${rating_end}`;
+            }
+
             query.push(sql);
           });
         }
@@ -29,6 +44,7 @@ router.get("/", (req, res, next) => {
       return { query, db };
     })
     .then(async ({ query, db }) => {
+      console.log("query", query);
       const bothResults = [];
       for (let index = 0; index < query.length; index++) {
         const tempResult = await db.all(query[index]);
