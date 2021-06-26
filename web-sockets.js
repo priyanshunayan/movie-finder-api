@@ -26,6 +26,7 @@ wss.on("connection", function connection(ws, req) {
       const numberInQuery = await db.all(canJoinQuery);
       wss.clients.forEach(function each(client) {
         if (client.readyState === 1) {
+          console.log("message sent", session_id);
           client.send(
             JSON.stringify({
               session_id: session_id,
@@ -62,6 +63,6 @@ wss.on("connection", function connection(ws, req) {
   }
 });
 
-server.listen(process.env.PORT || 3000, function () {
-  console.log(`http/ws server listening on ${process.env.PORT || 3000}`);
+server.listen(process.env.PORT || 8080, function () {
+  console.log(`http/ws server listening on ${process.env.PORT || 8080}`);
 });
