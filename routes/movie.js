@@ -30,18 +30,26 @@ router.get("/", (req, res, next) => {
           language,
         }) => {
           const genreArray = genre.split(",");
-          const languageArray = language.split(",");
+          const languageArray = language?.split(",") || [];
           genreArray.forEach((genreEle) => {
             let sql;
-            languageArray.forEach((lang) => {
+            if (languageArray.length > 0) {
+              languageArray.forEach((lang) => {
+                if (genreEle !== "All genres") {
+                  sql = `SELECT * FROM movie WHERE original_language LIKE "%${lang}%" AND Genre LIKE '%${genreEle}%' AND Released_Year BETWEEN ${start_year} AND ${end_year} AND IMDB_Rating BETWEEN ${rating_start} AND ${rating_end}`;
+                } else {
+                  sql = `SELECT * FROM movie WHERE original_language LIKE "%${lang}%" AND Released_Year BETWEEN ${start_year} AND ${end_year} AND IMDB_Rating BETWEEN ${rating_start} AND ${rating_end}`;
+                }
+                querySet.add(sql);
+              });
+            } else {
               if (genreEle !== "All genres") {
-                sql = `SELECT * FROM movie WHERE original_language LIKE "%${lang}%" AND Genre LIKE '%${genreEle}%' AND Released_Year BETWEEN ${start_year} AND ${end_year} AND IMDB_Rating BETWEEN ${rating_start} AND ${rating_end}`;
+                sql = `SELECT * FROM movie WHERE Genre LIKE '%${genreEle}%' AND Released_Year BETWEEN ${start_year} AND ${end_year} AND IMDB_Rating BETWEEN ${rating_start} AND ${rating_end}`;
               } else {
-                sql = `SELECT * FROM movie WHERE original_language LIKE "%${lang}%" AND Released_Year BETWEEN ${start_year} AND ${end_year} AND IMDB_Rating BETWEEN ${rating_start} AND ${rating_end}`;
+                sql = `SELECT * FROM movie WHERE Released_Year BETWEEN ${start_year} AND ${end_year} AND IMDB_Rating BETWEEN ${rating_start} AND ${rating_end}`;
               }
-              query.push(sql);
               querySet.add(sql);
-            });
+            }
           });
         }
       );
